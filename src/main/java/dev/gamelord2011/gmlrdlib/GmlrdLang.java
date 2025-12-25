@@ -1,9 +1,11 @@
 package dev.gamelord2011.gmlrdlib;
 
-import dev.gamelord2011.gmlrdlib.GmlrdLib;
-
+import java.lang.StackWalker.Option;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+
+import java.util.Map;
+import java.util.Optional;
 
 public class GmlrdLang {
 
@@ -25,5 +27,28 @@ public class GmlrdLang {
         }
     }
 
-    
+    /*
+        keyMap structure (cuz I cant keep track of it).
+
+            The package it was called from.
+              \                               It's an array so several packages can interface with it.
+               |                                        |
+        Map<String, Map<String, Map<String, String>[]>>[]
+                           |     + The keymap for a given package/language pair.
+              The language code
+
+
+    */
+
+    private Map<String, Map<String, Map<String, String>[]>>[] keyMap;
+
+    public static Map<String, String> constructLanguageSet(String langCode, String[] strings) { // I'm not implementing auto-language handling here, as it breaks some stuff.
+        Class<?> callerClass = StackWalker.getInstance(Option.RETAIN_CLASS_REFERENCE).getCallerClass();
+
+        
+    }
+
+    public static String getKeyFromMap(int index) {
+        return "lalala";
+    }
 }
