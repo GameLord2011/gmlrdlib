@@ -3,7 +3,7 @@
 	"package": "dev.gamelord2011.gmlrdlib.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
-		"ExampleMixin"
+		"GmLrdLangMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

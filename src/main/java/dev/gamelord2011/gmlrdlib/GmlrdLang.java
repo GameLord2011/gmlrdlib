@@ -3,9 +3,12 @@ package dev.gamelord2011.gmlrdlib;
 import java.lang.StackWalker.Option;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+import java.util.UUID;
 
 public class GmlrdLang {
 
@@ -30,25 +33,70 @@ public class GmlrdLang {
     /*
         keyMap structure (cuz I cant keep track of it).
 
-            The package it was called from.
-              \                               It's an array so several packages can interface with it.
-               |                                        |
-        Map<String, Map<String, Map<String, String>[]>>[]
+            The index.
+              \
+               |
+        Map<Intiger, Map<String, Map<String, String>[]>>
                            |     + The keymap for a given package/language pair.
               The language code
 
 
     */
 
-    private Map<String, Map<String, Map<String, String>[]>>[] keyMap;
+                    //Make me an array.
+                    //   \/
+    static Map<Integer, Map<String, String[]>> keyMap = new LinkedHashMap<>();
+    static Map<String, Integer> INDEX;
 
-    public static Map<String, String> constructLanguageSet(String langCode, String[] strings) { // I'm not implementing auto-language handling here, as it breaks some stuff.
-        Class<?> callerClass = StackWalker.getInstance(Option.RETAIN_CLASS_REFERENCE).getCallerClass();
+    public static Integer getIndex(String callerClass) {
+        Integer i = INDEX.size();
 
-        
+        if (INDEX.containsKey(callerClass)) {
+            return INDEX.get(callerClass);
+        }
+
+        INDEX.put(callerClass, i);
+        return i;
     }
 
-    public static String getKeyFromMap(int index) {
-        return "lalala";
+    public static void addToLanguageSet(String langCode, String[] strings) {
+        String callerClass = StackWalker.getInstance(Option.RETAIN_CLASS_REFERENCE).getCallerClass().toString();
+
+        Map<String, String[]> keys = new LinkedHashMap<>();
+
+        keys.put(callerClass, strings);
+
+        keyMap.put(
+            getIndex(callerClass),
+            keys
+        );
+    }
+
+    static Map<String, String> langMap = new LinkedHashMap<>();
+
+    public static Map<String, String> constructLanguageSet(String langCode) {
+        final String[] values;
+        List<String> merged = new ArrayList<>();
+        
+
+        for (Map<String, String[]> innerMap : keyMap.values()) {
+            for (String[] arr : innerMap.values()) {
+                Collections.addAll(merged, arr);
+            }
+        }
+
+        values = merged.toArray(new String[0]);
+
+        for (String value : values) {
+            langMap.put(hashString(UUID.randomUUID().toString()), value);
+        }
+
+        return langMap;
+    }
+
+    public static String getRuntimeKeyFromMap(Integer index, String langCode) {
+        String callerClass = StackWalker.getInstance(Option.RETAIN_CLASS_REFERENCE).getCallerClass().toString();
+
+        Map<String, String[]> innerMap = keyMap.get(getIndex(callerClass));
     }
 }
