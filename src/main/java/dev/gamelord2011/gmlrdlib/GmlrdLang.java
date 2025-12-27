@@ -10,8 +10,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class GmlrdLang {
+import net.minecraft.client.Minecraft;
 
+public class GmlrdLang {
+    static Map<Integer, Map<String, String[]>> keyMap = new LinkedHashMap<>();
+    static Map<String, Integer> INDEX = new LinkedHashMap<>();
+    static Map<String, String> langMap = new LinkedHashMap<>();
+
+    /**
+     * This returns an SHA3-512 hash of a given string.
+     * @param input
+     * @return
+     */
     private static String hashString(String input) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA3-512");
@@ -30,24 +40,11 @@ public class GmlrdLang {
         }
     }
 
-    /*
-        keyMap structure (cuz I cant keep track of it).
-
-            The index.
-              \
-               |
-        Map<Intiger, Map<String, Map<String, String>[]>>
-                           |     + The keymap for a given package/language pair.
-              The language code
-
-
-    */
-
-                    //Make me an array.
-                    //   \/
-    static Map<Integer, Map<String, String[]>> keyMap = new LinkedHashMap<>();
-    static Map<String, Integer> INDEX;
-
+    /**
+     * Fetches the index of a class from a map.
+     * @param callerClass
+     * @return the index of the class in the array.
+     */
     public static Integer getIndex(String callerClass) {
         Integer i = INDEX.size();
 
@@ -59,20 +56,19 @@ public class GmlrdLang {
         return i;
     }
 
-    public static void addToLanguageSet(String langCode, String[] strings) {
+    /**
+     * Adds a translation map to the language map. <strong>IMPORTANT:</strong> it counts each class that it's called from as a seperate class,
+     * so make sure that all language stuff is done in the <code>onInitialize()</code> of the main class.
+     * @param langMap a language map in the form of String (ISO639-1 language code), String[] (the strings that are translated)
+     */
+    public static void addToLanguageSet(Map<String, String[]> langMap) {
         String callerClass = StackWalker.getInstance(Option.RETAIN_CLASS_REFERENCE).getCallerClass().toString();
-
-        Map<String, String[]> keys = new LinkedHashMap<>();
-
-        keys.put(callerClass, strings);
 
         keyMap.put(
             getIndex(callerClass),
-            keys
+            langMap
         );
     }
-
-    static Map<String, String> langMap = new LinkedHashMap<>();
 
     public static Map<String, String> constructLanguageSet(String langCode) {
         final String[] values;
@@ -94,9 +90,20 @@ public class GmlrdLang {
         return langMap;
     }
 
-    public static String getRuntimeKeyFromMap(Integer index, String langCode) {
+    /**
+     * Gets the runtime translation key of a string at a given index from the translation map.
+     * @param index the index of the string to fetch for <strong>IMPORTANT:</strong> remember that arrays start at index zero.
+     * Oh, it also defaults to english if it has not been translated to a given language code.
+     * @return
+     */
+    public static String getRuntimeKeyFromMap(Integer index) {
         String callerClass = StackWalker.getInstance(Option.RETAIN_CLASS_REFERENCE).getCallerClass().toString();
 
         Map<String, String[]> innerMap = keyMap.get(getIndex(callerClass));
+
+        String[] strings = innerMap.get(Minecraft.getInstance().getLanguageManager().getSelected());
+
+        if(strings == null) strings = innerMap.get("en_us");
+        return strings[index];
     }
 }
