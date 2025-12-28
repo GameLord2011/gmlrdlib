@@ -3,19 +3,16 @@ package dev.gamelord2011.gmlrdlib;
 import java.lang.StackWalker.Option;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
-
-import net.minecraft.client.Minecraft;
 
 public class GmlrdLang {
     static Map<Integer, Map<String, String[]>> keyMap = new LinkedHashMap<>();
     static Map<String, Integer> INDEX = new LinkedHashMap<>();
     static Map<String, String> langMap = new LinkedHashMap<>();
+    static Map<Integer, Map<String, String>> keyGetter = new LinkedHashMap<>();
 
     /**
      * This returns an SHA3-512 hash of a given string.
@@ -64,6 +61,8 @@ public class GmlrdLang {
     public static void addToLanguageSet(Map<String, String[]> langMap) {
         String callerClass = StackWalker.getInstance(Option.RETAIN_CLASS_REFERENCE).getCallerClass().toString();
 
+        GmlrdLib.LOGGER.info("addToLanguageSet called by {}", callerClass);
+
         keyMap.put(
             getIndex(callerClass),
             langMap
@@ -71,39 +70,57 @@ public class GmlrdLang {
     }
 
     public static Map<String, String> constructLanguageSet(String langCode) {
-        final String[] values;
-        List<String> merged = new ArrayList<>();
-        
+        // final String[] values;
+        // List<String> merged = new ArrayList<>();
 
-        for (Map<String, String[]> innerMap : keyMap.values()) {
-            for (String[] arr : innerMap.values()) {
-                Collections.addAll(merged, arr);
+        for(Integer index : keyMap.keySet()) {
+            Map<String, String[]> map = keyMap.get(index);
+
+            String[] keys = map.getOrDefault(langCode, map.get("en_us"));
+            Map<String, String> keysMap = new LinkedHashMap<>();
+            for(String value : keys) {
+                String key = hashString(UUID.randomUUID().toString());
+                keysMap.put(key, value);
+                langMap.put(key, value);
             }
+            keyGetter.put(index, keysMap);
         }
 
-        values = merged.toArray(new String[0]);
+        GmlrdLib.LOGGER.info("conStructLanguageSet called");
 
-        for (String value : values) {
-            langMap.put(hashString(UUID.randomUUID().toString()), value);
-        }
+        // for (Map<String, String[]> innerMap : keyMap.values()) {
+        //     for (String[] arr : innerMap.values()) {
+        //         Collections.addAll(merged, arr);
+        //     }
+        // }
+
+        // values = merged.toArray(new String[0]);
+
+        // for (String value : values) {
+        //     langMap.put(hashString(UUID.randomUUID().toString()), value);
+        // }
 
         return langMap;
     }
 
     /**
      * Gets the runtime translation key of a string at a given index from the translation map.
-     * @param index the index of the string to fetch for <strong>IMPORTANT:</strong> remember that arrays start at index zero.
-     * Oh, it also defaults to english if it has not been translated to a given language code.
-     * @return
+     * @param index the index of the string to fetch for.
+     * @return the translation key of the language.
      */
     public static String getRuntimeKeyFromMap(Integer index) {
         String callerClass = StackWalker.getInstance(Option.RETAIN_CLASS_REFERENCE).getCallerClass().toString();
 
-        Map<String, String[]> innerMap = keyMap.get(getIndex(callerClass));
+        Map<String, String> innerMap = keyGetter.get(getIndex(callerClass));
 
-        String[] strings = innerMap.get(Minecraft.getInstance().getLanguageManager().getSelected());
+        GmlrdLib.LOGGER.info("innerMap: {}", innerMap);
 
-        if(strings == null) strings = innerMap.get("en_us");
-        return strings[index];
+        Optional<String> nthKey = innerMap.keySet().stream().skip(index).findFirst();
+
+        if(!nthKey.isPresent()) {
+            throw new IndexOutOfBoundsException();
+        }
+
+        return nthKey.toString();
     }
 }
