@@ -5,14 +5,28 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
+import java.util.Map.Entry;
+import java.util.Objects;
 
 public class GmlrdLang {
-    static Map<Integer, Map<String, String[]>> keyMap = new LinkedHashMap<>();
+    static Map<Integer, Map<String, Map<String, String>>> keyMap = new LinkedHashMap<>();
     static Map<String, Integer> INDEX = new LinkedHashMap<>();
     static Map<String, String> langMap = new LinkedHashMap<>();
     static Map<Integer, Map<String, String>> keyGetter = new LinkedHashMap<>();
+
+
+    // Source - https://stackoverflow.com/questions/1383797/java-hashmap-how-to-get-key-from-value
+    // Posted by Vitalii Fedorenko, modified by community. See post 'Timeline' for change history
+    // Retrieved 2025-12-30, License - CC BY-SA 4.0
+    public static <T, E> T getKeyByValue(Map<T, E> map, E value) {
+        for (Entry<T, E> entry : map.entrySet()) {
+            if (Objects.equals(value, entry.getValue())) {
+                return entry.getKey();
+            }
+        }
+        return null;
+    }
 
     /**
      * This returns an SHA3-512 hash of a given string.
@@ -60,45 +74,37 @@ public class GmlrdLang {
      */
     public static void addToLanguageSet(Map<String, String[]> langMap) {
         String callerClass = StackWalker.getInstance(Option.RETAIN_CLASS_REFERENCE).getCallerClass().toString();
+        Map<String, Map<String, String>> keys = new LinkedHashMap<>();
 
-        GmlrdLib.LOGGER.info("addToLanguageSet called by {}", callerClass);
+        for (String[] vals : langMap.values()) {
+            Map<String, String> kvps = new LinkedHashMap<>();
+            String langCode = getKeyByValue(langMap, vals);
+            for(String val : vals) {
+                String key = hashString(UUID.randomUUID().toString());
+                kvps.put(key, val);
+            }
+            keys.put(langCode, kvps);
+        }
+
+        GmlrdLib.LOGGER.info("keys: {}, calledby: {}", keys, callerClass);
 
         keyMap.put(
             getIndex(callerClass),
-            langMap
+            keys
         );
     }
 
     public static Map<String, String> constructLanguageSet(String langCode) {
-        // final String[] values;
-        // List<String> merged = new ArrayList<>();
+        keyGetter.clear();
 
         for(Integer index : keyMap.keySet()) {
-            Map<String, String[]> map = keyMap.get(index);
-
-            String[] keys = map.getOrDefault(langCode, map.get("en_us"));
-            Map<String, String> keysMap = new LinkedHashMap<>();
-            for(String value : keys) {
-                String key = hashString(UUID.randomUUID().toString());
-                keysMap.put(key, value);
-                langMap.put(key, value);
+            Map<String, Map<String, String>> map = keyMap.get(index);
+            Map<String, String> keys = map.getOrDefault(langCode, map.get("en_us"));
+            for(String key : keys.keySet()) {
+                langMap.put(key, keys.get(key));
             }
-            keyGetter.put(index, keysMap);
+            keyGetter.put(index, keys);
         }
-
-        GmlrdLib.LOGGER.info("conStructLanguageSet called");
-
-        // for (Map<String, String[]> innerMap : keyMap.values()) {
-        //     for (String[] arr : innerMap.values()) {
-        //         Collections.addAll(merged, arr);
-        //     }
-        // }
-
-        // values = merged.toArray(new String[0]);
-
-        // for (String value : values) {
-        //     langMap.put(hashString(UUID.randomUUID().toString()), value);
-        // }
 
         return langMap;
     }
@@ -111,16 +117,22 @@ public class GmlrdLang {
     public static String getRuntimeKeyFromMap(Integer index) {
         String callerClass = StackWalker.getInstance(Option.RETAIN_CLASS_REFERENCE).getCallerClass().toString();
 
+        if(keyGetter == null) return "";
+
         Map<String, String> innerMap = keyGetter.get(getIndex(callerClass));
+
+        if(innerMap == null) return UUID.randomUUID().toString();
 
         GmlrdLib.LOGGER.info("innerMap: {}", innerMap);
 
-        Optional<String> nthKey = innerMap.keySet().stream().skip(index).findFirst();
-
-        if(!nthKey.isPresent()) {
-            throw new IndexOutOfBoundsException();
+        int i = 0;
+        for(String key : innerMap.keySet()) {
+            if(i == index) {
+                return key;
+            }
+            i++;
         }
 
-        return nthKey.toString();
+        return "";
     }
 }
