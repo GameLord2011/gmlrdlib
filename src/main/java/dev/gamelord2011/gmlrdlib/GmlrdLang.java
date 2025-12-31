@@ -3,9 +3,12 @@ package dev.gamelord2011.gmlrdlib;
 import java.lang.StackWalker.Option;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.Set;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.Objects;
 
@@ -13,8 +16,6 @@ public class GmlrdLang {
     static Map<Integer, Map<String, Map<String, String>>> keyMap = new LinkedHashMap<>();
     static Map<String, Integer> INDEX = new LinkedHashMap<>();
     static Map<String, String> langMap = new LinkedHashMap<>();
-    static Map<Integer, Map<String, String>> keyGetter = new LinkedHashMap<>();
-
 
     // Source - https://stackoverflow.com/questions/1383797/java-hashmap-how-to-get-key-from-value
     // Posted by Vitalii Fedorenko, modified by community. See post 'Timeline' for change history
@@ -70,32 +71,42 @@ public class GmlrdLang {
     /**
      * Adds a translation map to the language map. <strong>IMPORTANT:</strong> it counts each class that it's called from as a seperate class,
      * so make sure that all language stuff is done in the <code>onInitialize()</code> of the main class.
-     * @param langMap a language map in the form of String (ISO639-1 language code), String[] (the strings that are translated)
+     * @param langMap a language map in the form of String (ISO639-1 language code), String[][], (in the structure of [normal strings (chat text or smth)], [things that need to be turned into identifiers])
      */
-    public static void addToLanguageSet(Map<String, String[]> langMap) {
+    public static void addToLanguageSet(Map<String, String[][]> langMap) {
+        if(langMap.values().size() > 2) throw new IndexOutOfBoundsException();
         String callerClass = StackWalker.getInstance(Option.RETAIN_CLASS_REFERENCE).getCallerClass().toString();
         Map<String, Map<String, String>> keys = new LinkedHashMap<>();
 
-        for (String[] vals : langMap.values()) {
+        List<String> UUIDS = new ArrayList<>();
+
+        int KeysLen = langMap.values().iterator().next().length;
+
+        for(int i = 0; i < KeysLen; i++) {
+            UUIDS.add(hashString(UUID.randomUUID().toString()));
+        }
+
+
+        int index = 0;
+        for (String[][] vals : langMap.values()) {
             Map<String, String> kvps = new LinkedHashMap<>();
             String langCode = getKeyByValue(langMap, vals);
+            int i = 0;
             for(String val : vals) {
-                String key = hashString(UUID.randomUUID().toString());
+                String key = UUIDS.get(i++);
                 kvps.put(key, val);
             }
             keys.put(langCode, kvps);
         }
 
-        GmlrdLib.LOGGER.info("keys: {}, calledby: {}", keys, callerClass);
-
         keyMap.put(
             getIndex(callerClass),
             keys
         );
+        GmlrdLib.LOGGER.info("keyMap: {}", keyMap);
     }
 
     public static Map<String, String> constructLanguageSet(String langCode) {
-        keyGetter.clear();
 
         for(Integer index : keyMap.keySet()) {
             Map<String, Map<String, String>> map = keyMap.get(index);
@@ -103,7 +114,6 @@ public class GmlrdLang {
             for(String key : keys.keySet()) {
                 langMap.put(key, keys.get(key));
             }
-            keyGetter.put(index, keys);
         }
 
         return langMap;
@@ -117,16 +127,10 @@ public class GmlrdLang {
     public static String getRuntimeKeyFromMap(Integer index) {
         String callerClass = StackWalker.getInstance(Option.RETAIN_CLASS_REFERENCE).getCallerClass().toString();
 
-        if(keyGetter == null) return "";
-
-        Map<String, String> innerMap = keyGetter.get(getIndex(callerClass));
-
-        if(innerMap == null) return UUID.randomUUID().toString();
-
-        GmlrdLib.LOGGER.info("innerMap: {}", innerMap);
+        Set<String> valSet = keyMap.get(getIndex(callerClass)).values().iterator().next().keySet();
 
         int i = 0;
-        for(String key : innerMap.keySet()) {
+        for(String key : valSet) {
             if(i == index) {
                 return key;
             }
