@@ -10,10 +10,14 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.List;
 import java.util.Map.Entry;
+
+import net.minecraft.resources.Identifier;
+
 import java.util.Objects;
 
 public class GmlrdLang {
     static Map<Integer, Map<String, Map<String, String>>> keyMap = new LinkedHashMap<>();
+    static Map<Integer, Map<String, Map<Identifier, String>>> IdentMap = new LinkedHashMap<>();
     static Map<String, Integer> INDEX = new LinkedHashMap<>();
     static Map<String, String> langMap = new LinkedHashMap<>();
 
@@ -73,37 +77,62 @@ public class GmlrdLang {
      * so make sure that all language stuff is done in the <code>onInitialize()</code> of the main class.
      * @param langMap a language map in the form of String (ISO639-1 language code), String[][], (in the structure of [normal strings (chat text or smth)], [things that need to be turned into identifiers])
      */
-    public static void addToLanguageSet(Map<String, String[][]> langMap) {
-        if(langMap.values().size() > 2) throw new IndexOutOfBoundsException();
+    public static void addToLanguageSet(Map<String, String[][]> langMap, String MOD_ID) {
+        // if(langMap.values().size() > 2) throw new IndexOutOfBoundsException();
         String callerClass = StackWalker.getInstance(Option.RETAIN_CLASS_REFERENCE).getCallerClass().toString();
         Map<String, Map<String, String>> keys = new LinkedHashMap<>();
 
         List<String> UUIDS = new ArrayList<>();
+        List<String> IdentUUIDS = new ArrayList<>();
 
-        int KeysLen = langMap.values().iterator().next().length;
+        int KeysLen = langMap.values().iterator().next()[0].length;
 
         for(int i = 0; i < KeysLen; i++) {
             UUIDS.add(hashString(UUID.randomUUID().toString()));
         }
 
+        if(langMap.values().iterator().next().length > 1) {
+            int IdentLen = langMap.values().iterator().next()[1].length;
+            for(int i = 0; i < IdentLen; i++) {
+                IdentUUIDS.add(hashString(UUID.randomUUID().toString()));
+            }
+            GmlrdLib.LOGGER.info("IdentUUIDS, {}", IdentUUIDS);
+        }
 
-        int index = 0;
+
+        Map<String, Map<Identifier, String>> identMap = new LinkedHashMap<>();
+        Map<Identifier, String> identKvps = new LinkedHashMap<>();
+
+
         for (String[][] vals : langMap.values()) {
             Map<String, String> kvps = new LinkedHashMap<>();
             String langCode = getKeyByValue(langMap, vals);
-            int i = 0;
-            for(String val : vals) {
-                String key = UUIDS.get(i++);
-                kvps.put(key, val);
+            int i = 0, n = 0, j = 0;
+            for(String[] valz : vals) {
+                if(j == 0) {
+                    for(String val : valz) {
+                        String key = UUIDS.get(i++);
+                        kvps.put(key, val);
+                    }
+                } else if (j == 1) {
+                    for(String val : valz) {
+                        Identifier identifier = Identifier.fromNamespaceAndPath(MOD_ID, IdentUUIDS.get(n++));
+                        identKvps.put(identifier, val);
+                        GmlrdLib.LOGGER.info("identKvps: {}", identKvps);
+                    }
+                }
+                j++;
             }
             keys.put(langCode, kvps);
+            identMap.put(langCode, identKvps);
         }
 
         keyMap.put(
             getIndex(callerClass),
             keys
         );
-        GmlrdLib.LOGGER.info("keyMap: {}", keyMap);
+        IdentMap.put(getIndex(callerClass), identMap);
+        GmlrdLib.LOGGER.info("keyMap: {}, IdentMap: {}", keyMap, IdentMap);
     }
 
     public static Map<String, String> constructLanguageSet(String langCode) {
@@ -113,6 +142,14 @@ public class GmlrdLang {
             Map<String, String> keys = map.getOrDefault(langCode, map.get("en_us"));
             for(String key : keys.keySet()) {
                 langMap.put(key, keys.get(key));
+            }
+        }
+
+        for(Integer index : IdentMap.keySet()) {
+            Map<Identifier, String> idents = IdentMap.get(index).getOrDefault(langCode, IdentMap.get(index).get("en_us"));
+            for(Identifier identifier : idents.keySet()) {
+                String keyString = "key.category." + identifier.getNamespace() + "." + identifier.getPath();
+                langMap.put(keyString, idents.get(identifier));
             }
         }
 
@@ -138,5 +175,22 @@ public class GmlrdLang {
         }
 
         return "";
+    }
+
+    public static Identifier getIdentifier(Integer index) {
+        String callerClass = StackWalker.getInstance(Option.RETAIN_CLASS_REFERENCE).getCallerClass().toString();
+        GmlrdLib.LOGGER.info("Getting Identifier index {} for {}", index, callerClass);
+
+        Set<Identifier> Identifiers = IdentMap.get(getIndex(callerClass)).values().iterator().next().keySet();
+
+        int i = 0;
+        for(Identifier key : Identifiers) {
+            if(i == index) {
+                return key;
+            }
+            i++;
+        }
+
+        return null;
     }
 }

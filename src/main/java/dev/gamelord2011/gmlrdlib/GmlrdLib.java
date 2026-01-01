@@ -20,22 +20,34 @@ public class GmlrdLib implements ModInitializer {
 	// It is considered best practice to use your mod id as the logger's name.
 	// That way, it's clear which mod wrote info, warnings, and errors.
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+	public static KeyMapping.Category category;
 
 	@Override
 	public void onInitialize() {
 		//GmLrdLang test code.
-		Map<String, String[]> langMap = Map.ofEntries(
-			Map.entry("en_us", new String[] {
-				"test"
+		Map<String, String[][]> langMap = Map.ofEntries(
+			Map.entry("en_us", new String[][] {
+				new String[] {
+					"test"
+				},
+				new String[] {
+					"Ident test"
+				}
 			}),
-			Map.entry("es_es", new String[]{
-				"test2"
+			Map.entry("es_es", new String[][]{
+				new String[] {
+					"test2"
+				},
+				new String[] {
+					"IdentTest2"
+				}
 			})
 		);
-		GmlrdLang.addToLanguageSet(langMap);
+		GmlrdLang.addToLanguageSet(langMap, MOD_ID);
 		LOGGER.info("GmLrdLib initalized.");
 
-		KeyMapping daledale = KeyBindingHelper.registerKeyBinding(new KeyMapping(MOD_ID, GLFW.GLFW_KEY_GRAVE_ACCENT, null));
+		category = KeyMapping.Category.register(GmlrdLang.getIdentifier(0));
+		KeyMapping daledale = KeyBindingHelper.registerKeyBinding(new KeyMapping(MOD_ID, GLFW.GLFW_KEY_GRAVE_ACCENT, category));
 
 
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
