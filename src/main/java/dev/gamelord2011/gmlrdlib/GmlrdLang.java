@@ -96,43 +96,40 @@ public class GmlrdLang {
             for(int i = 0; i < IdentLen; i++) {
                 IdentUUIDS.add(hashString(UUID.randomUUID().toString()));
             }
-            GmlrdLib.LOGGER.info("IdentUUIDS, {}", IdentUUIDS);
         }
 
-
         Map<String, Map<Identifier, String>> identMap = new LinkedHashMap<>();
-        Map<Identifier, String> identKvps = new LinkedHashMap<>();
-
 
         for (String[][] vals : langMap.values()) {
             Map<String, String> kvps = new LinkedHashMap<>();
+            Map<Identifier, String> identKvps = new LinkedHashMap<>();
             String langCode = getKeyByValue(langMap, vals);
-            int i = 0, n = 0, j = 0;
+            int i = 0, n = 0;
             for(String[] valz : vals) {
-                if(j == 0) {
+                if(vals[0].equals(valz)) {
                     for(String val : valz) {
                         String key = UUIDS.get(i++);
                         kvps.put(key, val);
                     }
-                } else if (j == 1) {
+                } else if (vals[1].equals(valz)) {
                     for(String val : valz) {
                         Identifier identifier = Identifier.fromNamespaceAndPath(MOD_ID, IdentUUIDS.get(n++));
                         identKvps.put(identifier, val);
-                        GmlrdLib.LOGGER.info("identKvps: {}", identKvps);
                     }
+                    identMap.put(langCode, identKvps);
                 }
-                j++;
             }
             keys.put(langCode, kvps);
-            identMap.put(langCode, identKvps);
         }
 
         keyMap.put(
             getIndex(callerClass),
             keys
         );
-        IdentMap.put(getIndex(callerClass), identMap);
-        GmlrdLib.LOGGER.info("keyMap: {}, IdentMap: {}", keyMap, IdentMap);
+        IdentMap.put(
+            getIndex(callerClass),
+            identMap
+        );
     }
 
     public static Map<String, String> constructLanguageSet(String langCode) {
