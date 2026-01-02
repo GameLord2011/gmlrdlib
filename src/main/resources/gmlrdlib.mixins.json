@@ -1,6 +1,6 @@
 {
 	"required": true,
-	"package": "io.github.gamelord2011.gmlrdlib.mixin",
+	"package": "dev.gamelord2011.gmlrdlib.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
 		"GmLrdLangMixin"

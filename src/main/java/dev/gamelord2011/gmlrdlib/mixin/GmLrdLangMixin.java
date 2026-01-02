@@ -1,12 +1,11 @@
-package io.github.gamelord2011.gmlrdlib.mixin;
+package dev.gamelord2011.gmlrdlib.mixin;
+
+import dev.gamelord2011.gmlrdlib.GmlrdLang;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
-
-import io.github.gamelord2011.gmlrdlib.GmlrdLang;
-
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
