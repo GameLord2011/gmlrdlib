@@ -1,8 +1,10 @@
 package dev.gamelord2011.gmlrdlib;
 
 import java.lang.StackWalker.Option;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.LinkedHashMap;
@@ -10,21 +12,21 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Objects;
 
 import net.minecraft.resources.Identifier;
 
-import java.util.Objects;
-
 public class GmlrdLang {
-    static Map<Integer, Map<String, Map<String, String>>> keyMap = new LinkedHashMap<>();
-    static Map<Integer, Map<String, Map<Identifier, String>>> IdentMap = new LinkedHashMap<>();
-    static Map<String, Integer> INDEX = new LinkedHashMap<>();
-    static Map<String, String> langMap = new LinkedHashMap<>();
+    private static Map<Integer, Map<String, Map<String, String>>> keyMap = new LinkedHashMap<>();
+    private static Map<Integer, Map<String, Map<Identifier, String>>> IdentMap = new LinkedHashMap<>();
+    private static Map<Class<?>, Integer> INDEX = new LinkedHashMap<>();
+    private static Map<String, String> langMap = new LinkedHashMap<>();
 
     // Source - https://stackoverflow.com/questions/1383797/java-hashmap-how-to-get-key-from-value
     // Posted by Vitalii Fedorenko, modified by community. See post 'Timeline' for change history
+    // Also modified by GameLord2011
     // Retrieved 2025-12-30, License - CC BY-SA 4.0
-    public static <T, E> T getKeyByValue(Map<T, E> map, E value) {
+    private static <T, E> T getKeyByValue(Map<T, E> map, E value) {
         for (Entry<T, E> entry : map.entrySet()) {
             if (Objects.equals(value, entry.getValue())) {
                 return entry.getKey();
@@ -61,7 +63,7 @@ public class GmlrdLang {
      * @param callerClass
      * @return the index of the class in the array.
      */
-    public static Integer getIndex(String callerClass) {
+    public static Integer getIndex(Class<?> callerClass) {
         Integer i = INDEX.size();
 
         if (INDEX.containsKey(callerClass)) {
@@ -75,11 +77,12 @@ public class GmlrdLang {
     /**
      * Adds a translation map to the language map. <strong>IMPORTANT:</strong> it counts each class that it's called from as a seperate class,
      * so make sure that all language stuff is done in the <code>onInitialize()</code> of the main class.
-     * @param langMap a language map in the form of String (ISO639-1 language code), String[][], (in the structure of [normal strings (chat text or smth)], [things that need to be turned into identifiers])
+     * @param langMap a language map in the form of String (ISO639-1 language code), String[][], (in the structure of [normal strings (chat text
+     * or smth)], [keybinding categories, but can probably be used for identifiers in general])
+     * @param MOD_ID Pass the MOD_ID string from the mods main class into here.
      */
     public static void addToLanguageSet(Map<String, String[][]> langMap, String MOD_ID) {
-        // if(langMap.values().size() > 2) throw new IndexOutOfBoundsException();
-        String callerClass = StackWalker.getInstance(Option.RETAIN_CLASS_REFERENCE).getCallerClass().toString();
+        Class<?> callerClass = StackWalker.getInstance(Option.RETAIN_CLASS_REFERENCE).getCallerClass();
         Map<String, Map<String, String>> keys = new LinkedHashMap<>();
 
         List<String> UUIDS = new ArrayList<>();
@@ -133,7 +136,6 @@ public class GmlrdLang {
     }
 
     public static Map<String, String> constructLanguageSet(String langCode) {
-
         for(Integer index : keyMap.keySet()) {
             Map<String, Map<String, String>> map = keyMap.get(index);
             Map<String, String> keys = map.getOrDefault(langCode, map.get("en_us"));
@@ -159,7 +161,7 @@ public class GmlrdLang {
      * @return the translation key of the language.
      */
     public static String getRuntimeKeyFromMap(Integer index) {
-        String callerClass = StackWalker.getInstance(Option.RETAIN_CLASS_REFERENCE).getCallerClass().toString();
+        Class<?> callerClass = StackWalker.getInstance(Option.RETAIN_CLASS_REFERENCE).getCallerClass();
 
         Set<String> valSet = keyMap.get(getIndex(callerClass)).values().iterator().next().keySet();
 
@@ -175,7 +177,7 @@ public class GmlrdLang {
     }
 
     public static Identifier getIdentifier(Integer index) {
-        String callerClass = StackWalker.getInstance(Option.RETAIN_CLASS_REFERENCE).getCallerClass().toString();
+        Class<?> callerClass = StackWalker.getInstance(Option.RETAIN_CLASS_REFERENCE).getCallerClass();
         GmlrdLib.LOGGER.info("Getting Identifier index {} for {}", index, callerClass);
 
         Set<Identifier> Identifiers = IdentMap.get(getIndex(callerClass)).values().iterator().next().keySet();

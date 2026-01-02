@@ -1,18 +1,19 @@
 package dev.gamelord2011.gmlrdlib.mixin;
 
+import dev.gamelord2011.gmlrdlib.GmlrdLang;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Map;
-
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.Mixin;
-import net.minecraft.client.resources.language.ClientLanguage;
+import org.spongepowered.asm.mixin.injection.At;
 
-import dev.gamelord2011.gmlrdlib.GmlrdLang;
+import java.util.Map;
+
+import net.minecraft.client.resources.language.ClientLanguage;
 import net.minecraft.client.Minecraft;
 
-import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(ClientLanguage.class)
 public class GmLrdLangMixin {
