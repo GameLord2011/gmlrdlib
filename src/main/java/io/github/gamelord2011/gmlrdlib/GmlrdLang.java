@@ -1,4 +1,4 @@
-package dev.gamelord2011.gmlrdlib;
+package io.github.gamelord2011.gmlrdlib;
 
 import java.lang.StackWalker.Option;
 

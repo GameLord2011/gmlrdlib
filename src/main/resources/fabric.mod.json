@@ -16,7 +16,7 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"dev.gamelord2011.gmlrdlib.GmlrdLib"
+			"io.github.gamelord2011.gmlrdlib.GmlrdLib"
 		]
 	},
 	"mixins": [
