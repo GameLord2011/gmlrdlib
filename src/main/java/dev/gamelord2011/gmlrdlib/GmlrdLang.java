@@ -136,6 +136,13 @@ public class GmlrdLang {
     }
 
     public static Map<String, String> constructLanguageSet(String langCode) {
+        if(
+            StackWalker.getInstance(Option.RETAIN_CLASS_REFERENCE)
+                .getCallerClass()
+                .getName()
+            != "net.minecraft.client.resources.language.ClientLanguage"
+        ) throw new IllegalAccessError();
+
         for(Integer index : keyMap.keySet()) {
             Map<String, Map<String, String>> map = keyMap.get(index);
             Map<String, String> keys = map.getOrDefault(langCode, map.get("en_us"));

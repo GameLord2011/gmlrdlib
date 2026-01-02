@@ -29,6 +29,7 @@ public class GmlrdLib implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		// GmLrdLang test code, uncomment for use.
+
 		// Map<String, String[][]> langMap = Map.ofEntries(
 		// 	Map.entry("en_us", new String[][] {
 		// 		new String[] {
