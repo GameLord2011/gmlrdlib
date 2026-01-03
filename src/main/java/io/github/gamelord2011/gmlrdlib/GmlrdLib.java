@@ -1,4 +1,4 @@
-package dev.gamelord2011.gmlrdlib;
+package io.github.gamelord2011.gmlrdlib;
 
 import net.fabricmc.api.ModInitializer;
 // import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
