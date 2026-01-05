@@ -3,15 +3,15 @@
 	"id": "gmlrdlib",
 	"version": "${version}",
 	"name": "GmlrdLib",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "Some useful code from @GameLord2011!",
 	"authors": [
-		"Me!"
+		"GameLord2011"
 	],
 	"contact": {
 		"homepage": "https://fabricmc.net/",
 		"sources": "https://github.com/FabricMC/fabric-example-mod"
 	},
-	"license": "CC0-1.0",
+	"license": "Mit",
 	"icon": "assets/gmlrdlib/icon.png",
 	"environment": "*",
 	"entrypoints": {
@@ -25,7 +25,6 @@
 	"depends": {
 		"fabricloader": ">=0.18.4",
 		"minecraft": "~1.21.11",
-		"java": ">=21",
-		"fabric-api": "*"
+		"java": ">=21"
 	}
 }

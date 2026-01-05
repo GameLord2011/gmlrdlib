@@ -1,6 +1,9 @@
 package io.github.gamelord2011.gmlrdlib;
 
 import net.fabricmc.api.ModInitializer;
+
+// GmLrdLang test code, uncomment and add net.fabric.fabric-api as modImplementation for use.
+
 // import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 // import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 
@@ -16,18 +19,34 @@ import net.fabricmc.api.ModInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * GmlrdLib main class
+ */
 public class GmlrdLib implements ModInitializer {
+	/**
+	 * The mod id.
+	 */
 	public static final String MOD_ID = "gmlrdlib";
 
+	/**
+	 * GmlrdLib logger.
+	 */
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+
+	// GmLrdLang test code, uncomment for use.
 
 	// public static KeyMapping.Category category;
 	// static Identifier fetchCategoryIdentifierKey() {
 	// 	return GmlrdLang.getIdentifier(0);
 	// }
 
+	/**
+	 * GmLrdLib init code.
+	 * @since 1.0.0
+	 */
 	@Override
 	public void onInitialize() {
+
 		// GmLrdLang test code, uncomment for use.
 
 		// Map<String, String[][]> langMap = Map.ofEntries(

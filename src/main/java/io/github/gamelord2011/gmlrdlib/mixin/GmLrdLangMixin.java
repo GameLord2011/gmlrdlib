@@ -15,7 +15,9 @@ import java.util.Map;
 import net.minecraft.client.resources.language.ClientLanguage;
 import net.minecraft.client.Minecraft;
 
-
+/**
+ * GmLrdLangMixin
+ */
 @Mixin(ClientLanguage.class)
 public class GmLrdLangMixin {
     private static final Logger langLogger = LoggerFactory.getLogger("gmlrdlib.mixin.GmLrdLangMixin");
