@@ -85,6 +85,11 @@ publishing {
                     repo.appendNode('id', 'fabricmc')
                     repo.appendNode('url', 'https://maven.fabricmc.net/')
                 }
+				scm {
+					connection = 'scm:git:git://github.com/gamelord2011/gmlrdlib.git'
+					developerConnection = 'scm:git:ssh://github.com/gamelord2011/gmlrdlib.git'
+					url = 'https://github.com/gamelord2011/gmlrdlib/'
+				}
             }
         }
     }
@@ -97,5 +102,6 @@ publishing {
 }
 
 signing {
+	useGpgCmd()
     sign publishing.publications.mavenJava
 }
