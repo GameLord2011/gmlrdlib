@@ -8,8 +8,8 @@
 		"GameLord2011"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"homepage": "https://github.com/gamelord2011/gmlrdlib/",
+		"sources": "https://github.com/gamelord2011/gmlrdlib/"
 	},
 	"license": "Mit",
 	"icon": "assets/gmlrdlib/icon.png",
@@ -26,5 +26,16 @@
 		"fabricloader": ">=0.18.4",
 		"minecraft": "~1.21.11",
 		"java": ">=21"
+	},
+	"custom": {
+		"modmenu": {
+			"links": {
+				"modmenu.website": "https://github.com/gamelord2011/gmlrdlib/",
+				"modmenu.issues": "https://github.com/gamelord2011/gmlrdlib/issues/"
+			},
+			"badges": [
+				"library"
+			]
+		}
 	}
 }
