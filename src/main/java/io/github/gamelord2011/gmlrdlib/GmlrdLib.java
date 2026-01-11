@@ -1,6 +1,6 @@
 package io.github.gamelord2011.gmlrdlib;
 
-import net.fabricmc.api.ModInitializer;
+import net.fabricmc.api.ClientModInitializer;
 
 // GmLrdLang test code, uncomment and add net.fabric.fabric-api as modImplementation for use.
 
@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
 /**
  * GmlrdLib main class
  */
-public class GmlrdLib implements ModInitializer {
+public class GmlrdLib implements ClientModInitializer {
 	/**
 	 * The mod id.
 	 */
@@ -44,8 +44,7 @@ public class GmlrdLib implements ModInitializer {
 	 * GmLrdLib init code.
 	 * @since 1.0.0
 	 */
-	@Override
-	public void onInitialize() {
+	public void onInitializeClient() {
 
 		// GmLrdLang test code, uncomment for use.
 
@@ -70,8 +69,6 @@ public class GmlrdLib implements ModInitializer {
 		// GmlrdLang.addToLanguageSet(langMap, MOD_ID);
 		// category = KeyMapping.Category.register(GmlrdLang.getIdentifier(0));
 		// KeyMapping daledale = KeyBindingHelper.registerKeyBinding(new KeyMapping(MOD_ID, GLFW.GLFW_KEY_GRAVE_ACCENT, category));
-
-
 		// ClientTickEvents.END_CLIENT_TICK.register(client -> {
 		// 	if(daledale == null) return;
 

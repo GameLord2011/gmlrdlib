@@ -15,7 +15,7 @@
 	"icon": "assets/gmlrdlib/icon.png",
 	"environment": "client",
 	"entrypoints": {
-		"main": [
+		"client": [
 			"io.github.gamelord2011.gmlrdlib.GmlrdLib"
 		]
 	},
