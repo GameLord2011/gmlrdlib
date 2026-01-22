@@ -22,6 +22,12 @@ Readthedocs.
 
 To be honest, because I saw an extremely specific gap that needed to be filled by some sort of tool, and there was nothing. I used the fabric toolchain and leveraged spongepowered's mixin project to allow this to work.
 
+## Demo
+
+### GmlrdLang
+
+[AGSR's lang system redone with this](https://github.com/GameLord2011/Anti-Grian-Switch-Reborn/tree/UsingGmlrdLib)
+
 ## Aren't there more efficent ways to do these things???
 
 ### GmlrdLang
