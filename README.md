@@ -33,3 +33,9 @@ To be honest, because I saw an extremely specific gap that needed to be filled b
 ### GmlrdLang
 
 Undoubtedly, there are several better ways to do this. For example, I could take [Wurst Imperium's approach](https://github.com/Wurst-Imperium/Wurst7/blob/master/src/main/java/net/wurstclient/WurstTranslator.java) and just reimplement the vanilla translation system in it's entirety. Or I could take an approach similar to [NikOverflow's method](https://github.com/NikOverflow/ExploitPreventer/blob/master/src/main/java/com/nikoverflow/exploitpreventer/injection/mixin/vanilla/AbstractSignEditScreenMixin.java) and block signs and whatnot from reading them, but I wanted to take my own approach.
+
+## How did I do that?
+
+### GmlrdLang
+
+I leveraged sponegowered's Mixin library to hook into Minecraft translation builder and made it inject custom translations (see the javadoc comments, documentation, and implementation example for examples) 
