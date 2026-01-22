@@ -26,7 +26,7 @@ To be honest, because I saw an extremely specific gap that needed to be filled b
 
 ### GmlrdLang
 
-[AGSR's lang system redone with this](https://github.com/GameLord2011/Anti-Grian-Switch-Reborn/tree/UsingGmlrdLib)
+[Anti Grian Switch Reborn's lang system redone with this](https://github.com/GameLord2011/Anti-Grian-Switch-Reborn/tree/UsingGmlrdLib).
 
 ## Aren't there more efficent ways to do these things???
 
