@@ -38,4 +38,4 @@ Undoubtedly, there are several better ways to do this. For example, I could take
 
 ### GmlrdLang
 
-I leveraged sponegowered's Mixin library to hook into Minecraft translation builder and made it inject custom translations (see the javadoc comments, documentation, and implementation example for examples) 
+I leveraged sponegowered's Mixin library to hook into Minecraft translation builder and made it inject custom translations (see the javadoc comments, documentation, and implementation example for examples).
