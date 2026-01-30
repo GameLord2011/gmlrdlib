@@ -39,3 +39,11 @@ Undoubtedly, there are several better ways to do this. For example, I could take
 ### GmlrdLang
 
 I leveraged sponegowered's Mixin library to hook into Minecraft translation builder and made it inject custom translations (see the javadoc comments, documentation, and implementation example for examples).
+
+## for users
+
+Install the mod using the jar on the Github Releases over on the right.
+
+## For flavortown reviewers (:P)
+
+On the lack of Modrinth/Cf prescensce, for reasons I won't go into, it cannot be on those platforms. Elliot specifically said that this is okay and that the MavenCentral publication counts as a valid demo link.
