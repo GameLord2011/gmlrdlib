@@ -150,17 +150,11 @@ public class GmlrdLang {
     }
 
     /**
-     * Constructs the language set for a given ISO639-1 language code <strong>DO NOT CALL THIS CLASS IN YOUR MOD, THIS IS ONLY HERE FOR COMPLETENESS, I also put in some handling to where you can't anyway, so HA</strong>.
+     * Constructs the language set for a given ISO639-1 language code <strong>DO NOT CALL THIS CLASS IN YOUR MOD</strong>.
      * @param langCode the ISO639-1 language code for which the language is to be generated.
      * @return A complete set of key-value pairs fot the given language.
      */
     public static Map<String, String> constructLanguageSet(String langCode) {
-        if(
-            StackWalker.getInstance(Option.RETAIN_CLASS_REFERENCE)
-                .getCallerClass()
-                .getName()
-            != "net.minecraft.client.resources.language.ClientLanguage"
-        ) throw new IllegalAccessError();
 
         for(Integer index : keyMap.keySet()) {
             Map<String, Map<String, String>> map = keyMap.get(index);
