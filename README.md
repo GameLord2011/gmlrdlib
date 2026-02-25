@@ -22,8 +22,28 @@ Readthedocs.
 
 To be honest, because I saw an extremely specific gap that needed to be filled by some sort of tool, and there was nothing. I used the fabric toolchain and leveraged spongepowered's mixin project to allow this to work.
 
+## Demos
+
+### GmlrdLang
+
+[Anti Grian Switch Reborn's lang system redone with this](https://github.com/GameLord2011/Anti-Grian-Switch-Reborn/tree/UsingGmlrdLib).
+
 ## Aren't there more efficent ways to do these things???
 
 ### GmlrdLang
 
 Undoubtedly, there are several better ways to do this. For example, I could take [Wurst Imperium's approach](https://github.com/Wurst-Imperium/Wurst7/blob/master/src/main/java/net/wurstclient/WurstTranslator.java) and just reimplement the vanilla translation system in it's entirety. Or I could take an approach similar to [NikOverflow's method](https://github.com/NikOverflow/ExploitPreventer/blob/master/src/main/java/com/nikoverflow/exploitpreventer/injection/mixin/vanilla/AbstractSignEditScreenMixin.java) and block signs and whatnot from reading them, but I wanted to take my own approach.
+
+## How did I do that?
+
+### GmlrdLang
+
+I leveraged sponegowered's Mixin library to hook into Minecraft translation builder and made it inject custom translations (see the javadoc comments, documentation, and implementation example for examples).
+
+## for users
+
+Install the mod using the jar on the Github Releases over on the right.
+
+## For flavortown reviewers (:P)
+
+On the lack of Modrinth/Cf prescensce, for reasons I won't go into, it cannot be on those platforms. Elliot specifically said that this is okay and that the MavenCentral publication counts as a valid demo link.
